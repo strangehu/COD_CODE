@@ -1,0 +1,32 @@
+# This example shows an implementation of the counting number
+
+.data
+out: .word 10 	
+in: .word 0 		#switch
+
+.text
+main:
+	la a0, out		#把data.out的地址存入a0
+	lw t0 , 0(a0)	#备份
+	addi t1, t0, -1 #用于bne
+	lw a0 , 0(a0)	#将a0的值变成a0所指向地址的值，也就是data.out的值
+	li a7,1			#设置ecall的参数，a7为1时，输出为int类型
+	ecall
+	jal x1 ,test1
+
+test1:
+	addi a0 , a0 ,-1
+	addi sp , sp ,-8
+	sw a0, 0(sp) 		#test sw:将a0中的值，存入到sp指向的内存
+	beq a0 , zero,test2
+	jal x1 , test1
+test2:
+	lw a0 ,0(sp)
+	addi sp , sp , 8
+	ecall
+	bne a0 , t1 ,test2
+test3:			#test add
+	add a0 , x0 , t0
+	ecall
+	li a7 , 10
+	ecall 
