@@ -1,3 +1,4 @@
+##########################text_1###############################
 # This example shows an implementation of the counting number
 
 .data
@@ -30,3 +31,46 @@ test3:			#test add
 	ecall
 	li a7 , 10
 	ecall 
+
+
+
+######################text_2################################
+# This example shows an implementation of the Fabonacci Array
+
+.data
+f1: .word 1 		#first number
+f2: .word 2 		#second number
+count: .word 10    #the length of the array
+
+.text
+main:
+	la t0, count	#把data.count的地址存入t0
+	lw t0, 0(t0)	#将t0的值变成t0所指向地址的值，也就是count的值
+	la a0, f1		#把data.f1的地址存入a0
+	lw a0 , 0(a0)	#将a0的值变成a0所指向地址的值，也就是f1的值
+	li a7,1			#设置ecall的参数，a7为1时，输出为int类型
+	ecall			#打印f1
+	mv t1 , a0		#记录f1
+	sw a0 , 0(sp)	#存储f1到内存空间
+
+	la a0, f2		#把data.f2的地址存入a0
+	lw a0 , 0(a0)	#将a0的值变成a0所指向地址的值，也就是f2的值
+	ecall			#打印f2
+	mv t2 ,a0		#记录f2
+	addi sp , sp , -8
+	sw a0 , 0(sp)	#存储f2到内存空间
+	
+	jal x1 ,test1
+
+test1:
+	addi t0 , t0 , -1
+	addi sp , sp , -8
+	add  a0 , t1 , t2	#一次迭代
+	mv t1 , t2		
+	mv t2 , a0		
+	sw	a0 , 0(sp)	#test sw:将a0中的值，存入到sp指向的内存
+	ecall
+	bne t0 , zero,test1
+	li a7, 10
+	ecall 			#exit
+
